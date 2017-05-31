@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        app:showAsAction="never"
+        android:id="@+id/menuSettings"
+        android:icon="@drawable/settings48"
+        android:title="@string/settings"/>
+    <item
+        app:showAsAction="ifRoom"
+        android:id="@+id/menuSellYourBook"
+        android:title="@string/sell_a_book"/>
+</menu>

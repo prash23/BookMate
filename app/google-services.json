@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "57390772725",
+    "firebase_url": "https://bookmate-d0288.firebaseio.com",
+    "project_id": "bookmate-d0288",
+    "storage_bucket": "bookmate-d0288.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57390772725:android:8bcadca262af897f",
+        "android_client_info": {
+          "package_name": "prashanth.bookmate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "57390772725-rfmsnlpb4pnc8j2kotisi46vt92s8lf1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "prashanth.bookmate",
+            "certificate_hash": "3050d4befb52698ba60cdfd22e4c52a424abacd2"
+          }
+        },
+        {
+          "client_id": "57390772725-to2hedijvnp27ai4bgkhbef78de03g82.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmI2dCUi7SZq4VNQ4__NhddagXo1wUqL8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "57390772725-to2hedijvnp27ai4bgkhbef78de03g82.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
