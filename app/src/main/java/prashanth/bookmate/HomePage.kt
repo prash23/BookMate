@@ -14,11 +14,6 @@ class HomePage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_page)
-
-        //        googleApiClient = new GoogleApiClient.Builder(this)
-        //                .addApi(Places.GEO_DATA_API)
-        //                .addApi(Places.PLACE_DETECTION_API)
-        //                .build();
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

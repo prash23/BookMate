@@ -1,5 +1,6 @@
 package prashanth.bookmate
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -7,32 +8,25 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
-import android.text.Editable
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.Spinner
 import android.widget.Toast
-
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageMetadata
 import kotlinx.android.synthetic.main.activity_sell_books.*
-
-import java.io.ByteArrayOutputStream
-import java.util.UUID
-
 import prashanth.bookmate.models.Books
+import java.io.ByteArrayOutputStream
 
 class SellBooksActivity : AppCompatActivity() {
-    private val storage = FirebaseStorage.getInstance()
+    val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    val storage: FirebaseStorage = FirebaseStorage.getInstance()
     val adb = FirebaseDatabase.getInstance()
-    private var mAdPostClickListener = AdPostClickListener()
-    val databaseBooks = adb.getReference("books")
+    val RESULT_LOAD_IMAGE = 1
+    val databaseBooks = adb.getReference("books").push()
     var bookImagePath: String? = null
     var bookBitmap: Bitmap? = null
     var mProgressBar: ProgressBar? = null
@@ -66,11 +60,7 @@ class SellBooksActivity : AppCompatActivity() {
             val cursor = contentResolver.query(selectedImage,
                     filePathColumn, null, null, null)
             cursor!!.moveToFirst()
-
-//            val columnIndex = cursor.getColumnIndex(filePathColumn[0])
-//            val picturePath = cursor.getString(columnIndex)
             cursor.close()
-            //            bookBitmap = BitmapFactory.decodeFile(picturePath);
             book_image.setImageURI(selectedImage)
             val drawable = book_image.drawable
             bookBitmap = (drawable as BitmapDrawable).bitmap
@@ -87,75 +77,70 @@ class SellBooksActivity : AppCompatActivity() {
         val book_genre = genre.selectedItem.toString()
         val zipcode = pinCode.text.toString()
 
-        if (TextUtils.isEmpty(book_Name)) {
+        if (TextUtils.isEmpty(book_Name))
+        {
             Toast.makeText(this, "Missing book name", Toast.LENGTH_LONG).show()
-        } else if (TextUtils.isEmpty(author_Name)) {
+        }
+        else if (TextUtils.isEmpty(author_Name))
+        {
             Toast.makeText(this, "Missing author name", Toast.LENGTH_LONG).show()
-        } else if (TextUtils.isEmpty(book_Description)) {
+        }
+        else if (TextUtils.isEmpty(book_Description))
+        {
             Toast.makeText(this, "Missing book description", Toast.LENGTH_LONG).show()
-        } else if (TextUtils.isEmpty(mobile_Number)) {
+        }
+        else if (TextUtils.isEmpty(mobile_Number))
+        {
             Toast.makeText(this, "Missing mobile number", Toast.LENGTH_LONG).show()
-        } else if (TextUtils.isEmpty(price)) {
+        }
+        else if (TextUtils.isEmpty(price))
+        {
             Toast.makeText(this, "Missing book price", Toast.LENGTH_LONG).show()
-        } else if (TextUtils.isEmpty(book_genre)) {
+        }
+        else if (TextUtils.isEmpty(book_genre))
+        {
             Toast.makeText(this, "Missing book genre", Toast.LENGTH_LONG).show()
-        } else if (TextUtils.isEmpty(zipcode)) {
+        }
+        else if (TextUtils.isEmpty(zipcode))
+        {
             Toast.makeText(this, "Missing Zip code", Toast.LENGTH_LONG).show()
-        } else {
+        }
+        else
+        {
             mProgressBar!!.visibility = View.VISIBLE
             post_the_ad.isEnabled = false
+            val newBook = Books("", book_Name, author_Name, book_Description, mobile_Number, price,"", book_genre, zipcode)
 
-            mAdPostClickListener.uploadImage(book_Name)
-            mAdPostClickListener.adPost(book_Name, author_Name, book_Description, mobile_Number, price, book_genre, zipcode)
-
-
+            uploadImage(newBook)
         }
     }
 
+    @SuppressLint("VisibleForTests")
+    fun uploadImage(book: Books) {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bookBitmap!!.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
 
-    private inner class AdPostClickListener {
-
-        fun adPost(book_Name: String, author_Name: String, book_Description: String, mobile_Number: String, price: String, book_genre: String, zipcode: String) {
-            if (bookImagePath != null) {
-                try {
-                    val bookID = databaseBooks.push().key
-
-                    val newBook = Books(bookID, book_Name, author_Name, book_Description, mobile_Number, price, bookImagePath!!, book_genre, zipcode)
-
-                    databaseBooks.child(bookID).setValue(newBook)
-                    Toast.makeText(this@SellBooksActivity, "Your ad is posted successfully", Toast.LENGTH_SHORT).show()
-                    mProgressBar!!.visibility = View.GONE
-                    post_the_ad.isEnabled = true
-                } catch (ex: Exception) {
-                    Log.println(Log.ERROR,"exception is",ex.toString())
+        book_image.isDrawingCacheEnabled = false
+        val data = byteArrayOutputStream.toByteArray()
+        val bookImageRef = storage.reference
+                           .child(mAuth.currentUser!!.uid)
+                           .child(book.bookName)
+        bookImageRef.putBytes(data)
+                .addOnSuccessListener { snapshot ->
+                    try {
+                        book.photo = snapshot.downloadUrl.toString()
+                        book.userID = mAuth.currentUser!!.uid
+                        databaseBooks.setValue(book)
+                        Toast.makeText(this, "Your ad is posted successfully", Toast.LENGTH_SHORT).show()
+                        mProgressBar!!.visibility = View.GONE
+                        post_the_ad.isEnabled = true
+                    } catch (ex: Exception) {
+                        Log.println(Log.ERROR,"exception is",ex.toString())
+                    }
                 }
-
-            } else {
-                Toast.makeText(this@SellBooksActivity, "Error uploading image", Toast.LENGTH_LONG).show()
-                mProgressBar!!.visibility = View.GONE
-                post_the_ad.isEnabled = true
-            }
-        }
-
-        fun uploadImage(book_Name: String) {
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            bookBitmap!!.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-
-            book_image.isDrawingCacheEnabled = false
-            val data = byteArrayOutputStream.toByteArray()
-
-            val path = "bookImages/" + UUID.randomUUID() + ".png"
-            val bookImageRef = storage.reference.child(path)
-            val metadata = StorageMetadata.Builder()
-                    .setCustomMetadata("name", book_Name)
-                    .build()
-
-            val uploadTask = bookImageRef.putBytes(data, metadata)
-            uploadTask.addOnSuccessListener(this@SellBooksActivity) { taskSnapshot -> bookImagePath = taskSnapshot.downloadUrl!!.toString() }
-        }
-    }
-
-    companion object {
-        private val RESULT_LOAD_IMAGE = 1
+                .addOnFailureListener {
+                    Toast.makeText(this, "Failed to upload your ad", Toast.LENGTH_LONG).show()
+                    mProgressBar!!.visibility = View.GONE
+                    post_the_ad.isEnabled = true }
     }
 }

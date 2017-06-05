@@ -1,5 +1,6 @@
 package prashanth.bookmate.fragments
 
+
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,22 +13,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-
-
-import java.net.InetAddress
-
 import prashanth.bookmate.HomePage
 import prashanth.bookmate.R
 import prashanth.bookmate.interfaces.PageRedirect
+import java.net.InetAddress
 
 class LoginPage : Fragment() {
-
-
     var mPageRedirect: PageRedirect? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,20 +64,28 @@ class LoginPage : Fragment() {
                             // the auth state listener will be notified and logic to handle the
                             // signed in user can be handled in the listener.
                             progressBar.visibility = View.GONE
-                            if (!task.isSuccessful) {
+                            if (!task.isSuccessful)
+                            {
                                 // there was an error
-                                if (pwd.length < 6) {
+                                if (pwd.length < 6)
+                                {
                                     password.error = getString(R.string.minimum_password)
-                                } else {
-                                    Toast.makeText(activity, getString(R.string.auth_failed), Toast.LENGTH_LONG).show()
                                 }
-                            } else {
+                                else
+                                {
+                                Toast.makeText(activity, getString(R.string.auth_failed), Toast.LENGTH_LONG).show()
+                                }
+                            }
+                            else
+                            {
                                 Toast.makeText(activity, "Login Success", Toast.LENGTH_LONG).show()
                                 val it = Intent(activity, HomePage::class.java)
                                 startActivity(it)
                             }
                         }
-            } else {
+            }
+            else
+            {
                 progressBar.visibility = View.GONE
                 Toast.makeText(activity, "Please check your internet connection", Toast.LENGTH_LONG).show()
             }
