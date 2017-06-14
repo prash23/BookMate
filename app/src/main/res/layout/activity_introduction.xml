@@ -1,52 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_introduction"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="prashanth.bookmate.Introduction">
-
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="20dp">
-    <TextView
-        android:text="Welcome to BookMate! A marketplace for books"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="57dp"
-        android:id="@+id/textView3"
-        android:textSize="34sp"
-        android:fontFamily="serif"
-        android:textAlignment="center"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:id="@+id/intro_activity"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                tools:context="prashanth.bookmate.Introduction">
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        />
+        app:srcCompat="@drawable/logo"/>
+
+    <com.google.android.gms.common.SignInButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:id="@+id/google_sign"
+        android:layout_below="@id/imageView"
+        android:layout_centerHorizontal="true"/>
 
     <Button
-        android:text="signup"
+        android:text="email signup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="69dp"
+        android:layout_marginTop="30dp"
         android:id="@+id/registerBtn"
         android:textColor="@android:color/black"
-        android:layout_below="@+id/textView3"
         style="@style/Widget.AppCompat.Button.Colored"
         android:elevation="24dp"
-        android:background="@color/colorPrimary" />
+        android:background="@color/colorPrimary"
+        android:layout_below="@+id/google_sign"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
     <Button
-        android:text="login"
+        android:text="email login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/registerBtn"
         android:textColor="@android:color/black"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="20dp"
         android:id="@+id/loginbtn"
         android:background="@color/colorPrimary"
-        style="@style/Widget.AppCompat.Button.Colored" />
-</RelativeLayout>
-
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_below="@+id/registerBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
 
 </RelativeLayout>
