@@ -9,6 +9,10 @@
         android:icon="@drawable/settings48"
         android:title="@string/settings"/>
     <item
+        app:showAsAction="never"
+        android:id="@+id/menuLogout"
+        android:title="logout"/>
+    <item
         app:showAsAction="ifRoom"
         android:id="@+id/menuSellYourBook"
         android:title="@string/sell_a_book"/>

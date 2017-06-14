@@ -11,8 +11,12 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.ConnectionResult
 
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,10 +25,11 @@ import kotlinx.android.synthetic.main.home_page.*
 import prashanth.bookmate.adapters.TopBooksListAdapter
 import prashanth.bookmate.models.Books
 
-class HomePage : AppCompatActivity() {
-    private val googleApiClient: GoogleApiClient? = null
+class HomePage : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListener {
+
+    private var mGoogleApiClient: GoogleApiClient? = null
     private var mRecyclerView : RecyclerView? = null
-    private var mLayoutManager : RecyclerView.LayoutManager? = GridLayoutManager(this,3)
+    private var mLayoutManager : RecyclerView.LayoutManager? = GridLayoutManager(this,2)
     private var mBooksAdapter : TopBooksListAdapter? = null
     var bookList : ArrayList<Books>? = ArrayList()
     val mDatabase : FirebaseDatabase? = FirebaseDatabase.getInstance()
@@ -32,6 +37,13 @@ class HomePage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_page)
+        val gso : GoogleSignInOptions? = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
+        mGoogleApiClient = GoogleApiClient.Builder(this)
+                .enableAutoManage(this,this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso!!)
+                .build()
         mRecyclerView = mainRecyclerView as RecyclerView
         mRecyclerView!!.setHasFixedSize(true)
         mRecyclerView!!.layoutManager = mLayoutManager
@@ -86,13 +98,24 @@ class HomePage : AppCompatActivity() {
                 val it = Intent(this@HomePage, SellBooksActivity::class.java)
                 startActivity(it)
             }
+            R.id.menuLogout -> {
+                signOut()
+            }
         }
         return true
     }
 
-    companion object {
+    private fun signOut() {
+//        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback {
+//            finish()
+//            Toast.makeText(this,"Logged out successfully",Toast.LENGTH_LONG).show() }
+        FirebaseAuth.getInstance().signOut()
+        finish()
+        fragmentManager.popBackStack()
+    }
 
-        private val PLACE_PICKER_REQUEST = 1000
+    override fun onConnectionFailed(p0: ConnectionResult) {
+        Log.e("No Internet Connection", p0.toString())
     }
 }
 
