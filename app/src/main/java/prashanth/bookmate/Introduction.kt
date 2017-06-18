@@ -1,9 +1,8 @@
 package prashanth.bookmate
 
 import android.content.Intent
-import android.support.v4.app.FragmentTransaction
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -16,7 +15,6 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
-
 import prashanth.bookmate.fragments.ForgotPassword
 import prashanth.bookmate.fragments.LoginPage
 import prashanth.bookmate.fragments.RegisterFragment

@@ -43,7 +43,7 @@ class SellBooksActivity : AppCompatActivity() {
         book_image.setOnClickListener {
             val i = Intent(
                     Intent.ACTION_PICK,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 
             startActivityForResult(i, RESULT_LOAD_IMAGE)
         }

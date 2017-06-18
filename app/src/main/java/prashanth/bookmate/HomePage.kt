@@ -1,11 +1,9 @@
 package prashanth.bookmate
 
 import android.content.Intent
-import android.support.v4.app.FragmentTransaction
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
@@ -14,7 +12,6 @@ import android.widget.Toast
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
-
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -25,7 +22,7 @@ import kotlinx.android.synthetic.main.home_page.*
 import prashanth.bookmate.adapters.TopBooksListAdapter
 import prashanth.bookmate.models.Books
 
-class HomePage : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListener {
+class HomePage : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener {
 
     private var mGoogleApiClient: GoogleApiClient? = null
     private var mRecyclerView : RecyclerView? = null
@@ -52,7 +49,7 @@ class HomePage : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListener 
 
     private fun fetchBooks() {
         val database = mDatabase!!.getReference("books")
-        database.addChildEventListener(object : ChildEventListener{
+        database.addChildEventListener(object : ChildEventListener {
                     override fun onChildChanged(snapshot: DataSnapshot?, s: String?) {
                         displayBooks(snapshot!!.getValue(Books::class.java), snapshot.key)
                     }
@@ -82,7 +79,7 @@ class HomePage : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListener 
         }
         else
         {
-            Toast.makeText(applicationContext,"No Data Found",Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext,"No Data Found", Toast.LENGTH_LONG).show()
         }
 
     }
