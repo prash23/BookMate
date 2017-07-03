@@ -26,7 +26,7 @@ class HomePage : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener
 
     private var mGoogleApiClient: GoogleApiClient? = null
     private var mRecyclerView : RecyclerView? = null
-    private var mLayoutManager : RecyclerView.LayoutManager? = GridLayoutManager(this,2)
+    private var mLayoutManager : GridLayoutManager = GridLayoutManager(this,2)
     private var mBooksAdapter : TopBooksListAdapter? = null
     var bookList : ArrayList<Books>? = ArrayList()
     val mDatabase : FirebaseDatabase? = FirebaseDatabase.getInstance()

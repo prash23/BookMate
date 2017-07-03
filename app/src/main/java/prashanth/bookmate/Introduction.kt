@@ -15,23 +15,43 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import prashanth.bookmate.fragments.ForgotPassword
 import prashanth.bookmate.fragments.LoginPage
 import prashanth.bookmate.fragments.RegisterFragment
 import prashanth.bookmate.interfaces.PageRedirect
 
+
 class Introduction : AppCompatActivity(), View.OnClickListener, PageRedirect, GoogleApiClient.OnConnectionFailedListener {
     var mAuth: FirebaseAuth? = null
     var mGoogleApiClient: GoogleApiClient? = null
-    val RC_SIGN_IN = 3000
+    val RC_SIGN_IN = 2
+    var mAuthListener : FirebaseAuth.AuthStateListener? = null
+
+    override fun onStart() {
+        super.onStart()
+        mAuth!!.addAuthStateListener { mAuthListener }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_introduction)
         val signInButton = findViewById(R.id.google_sign) as SignInButton
+        mAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            if (firebaseAuth.currentUser != null) {
+                val it = Intent(applicationContext, HomePage::class.java)
+                startActivity(it)
+            }
+            else
+            {
+                Toast.makeText(this," Login failed", Toast.LENGTH_LONG).show()
+            }
+        }
         val login = findViewById(R.id.loginbtn) as Button
         val register = findViewById(R.id.registerBtn) as Button
         mAuth = FirebaseAuth.getInstance()
         val gso : GoogleSignInOptions? = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
         mGoogleApiClient = GoogleApiClient.Builder(this)
@@ -68,12 +88,30 @@ class Introduction : AppCompatActivity(), View.OnClickListener, PageRedirect, Go
         if (result.isSuccess)
         {
             val account: GoogleSignInAccount = result.signInAccount as GoogleSignInAccount
-            Toast.makeText(this,account.displayName+" Login successful", Toast.LENGTH_LONG).show()
-            val it = Intent(this, HomePage::class.java)
-            startActivity(it)
-            Log.e("Login Successful",account.displayName)
-
+            firebaseAuthWithGoogle(account)
         }
+        else{
+            Toast.makeText(this," Login failed", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
+
+        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+        mAuth!!.signInWithCredential(credential)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        val it = Intent(this, HomePage::class.java)
+                        startActivity(it)
+                        Toast.makeText(this,account.displayName+" Login successful", Toast.LENGTH_LONG).show()
+                    }
+                    else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("TAG", "signInWithCredential:failure", task.exception)
+                        Toast.makeText(this, "Authentication failed",Toast.LENGTH_SHORT).show()
+                    }
+                }
     }
 
     private fun fragmentsTransaction(page: String) {
