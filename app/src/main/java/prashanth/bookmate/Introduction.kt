@@ -16,17 +16,23 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import prashanth.bookmate.fragments.ForgotPassword
-import prashanth.bookmate.fragments.LoginPage
-import prashanth.bookmate.fragments.RegisterFragment
+import kotlinx.android.synthetic.main.activity_introduction.*
+import prashanth.bookmate.activities.ForgotPasswordActivity
+import prashanth.bookmate.activities.LoginActivity
+import prashanth.bookmate.activities.RegisterActivity
 import prashanth.bookmate.interfaces.PageRedirect
 
 
-class Introduction : AppCompatActivity(), View.OnClickListener, PageRedirect, GoogleApiClient.OnConnectionFailedListener {
+class Introduction : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener {
     var mAuth: FirebaseAuth? = null
     var mGoogleApiClient: GoogleApiClient? = null
     val RC_SIGN_IN = 2
     var mAuthListener : FirebaseAuth.AuthStateListener? = null
+
+    override fun onResume() {
+        super.onResume()
+        mAuth!!.addAuthStateListener { mAuthListener }
+    }
 
     override fun onStart() {
         super.onStart()
@@ -44,7 +50,7 @@ class Introduction : AppCompatActivity(), View.OnClickListener, PageRedirect, Go
             }
             else
             {
-                Toast.makeText(this," Login failed", Toast.LENGTH_LONG).show()
+                Toast.makeText(this," Login failed ", Toast.LENGTH_LONG).show()
             }
         }
         val login = findViewById(R.id.loginbtn) as Button
@@ -59,15 +65,18 @@ class Introduction : AppCompatActivity(), View.OnClickListener, PageRedirect, Go
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso!!)
                 .build()
         signInButton.setOnClickListener{ signIn() }
-        login.setOnClickListener(this)
-        register.setOnClickListener(this)
-    }
-
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.loginbtn -> fragmentsTransaction("loginPage")
-            R.id.registerBtn -> fragmentsTransaction("register")
-        }
+        login.setOnClickListener({
+            val loginPage = Intent(this, LoginActivity::class.java)
+            startActivity(loginPage)
+        })
+        register.setOnClickListener({
+            val registerPage = Intent(this, RegisterActivity::class.java)
+            startActivity(registerPage)
+        })
+        forgotbtn.setOnClickListener({
+            val forgotPassword = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(forgotPassword)
+        })
     }
 
     private fun signIn() {
@@ -114,33 +123,33 @@ class Introduction : AppCompatActivity(), View.OnClickListener, PageRedirect, Go
                 }
     }
 
-    private fun fragmentsTransaction(page: String) {
-        if (page.equals("loginPage", ignoreCase = true)) {
-            val loginFragment = LoginPage()
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.intro_activity, loginFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        } else if (page.equals("register", ignoreCase = true)) {
-            val registerFragment = RegisterFragment()
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.intro_activity, registerFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        } else if (page.equals("forgotPassword", ignoreCase = true)) {
-            val forgotFragment = ForgotPassword()
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.intro_activity, forgotFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
-    }
+//    private fun fragmentsTransaction(page: String) {
+//        if (page.equals("loginPage", ignoreCase = true)) {
+//            val loginFragment = LoginPage()
+//            val transaction = supportFragmentManager.beginTransaction()
+//            transaction.replace(R.id.intro_activity, loginFragment)
+//            transaction.addToBackStack(null)
+//            transaction.commit()
+//        } else if (page.equals("register", ignoreCase = true)) {
+//            val registerFragment = RegisterFragment()
+//            val transaction = supportFragmentManager.beginTransaction()
+//            transaction.replace(R.id.intro_activity, registerFragment)
+//            transaction.addToBackStack(null)
+//            transaction.commit()
+//        } else if (page.equals("forgotPassword", ignoreCase = true)) {
+//            val forgotFragment = ForgotPassword()
+//            val transaction = supportFragmentManager.beginTransaction()
+//            transaction.replace(R.id.intro_activity, forgotFragment)
+//            transaction.addToBackStack(null)
+//            transaction.commit()
+//        }
+//    }
 
     override fun onConnectionFailed(p0: ConnectionResult) {
         Log.e("Connection failed", p0.toString())
     }
 
-    override fun redirectPage(pageName: String) {
-        fragmentsTransaction(pageName)
-    }
+//    override fun redirectPage(pageName: String) {
+//        fragmentsTransaction(pageName)
+//    }
 }

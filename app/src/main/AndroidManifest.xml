@@ -52,6 +52,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomePage" />
         </activity>
+        <activity android:name=".activities.LoginActivity"
+            android:label="User Login"/>
+        <activity android:name=".activities.RegisterActivity"
+            android:label="User registration"/>
+        <activity android:name=".activities.ForgotPasswordActivity"
+            android:label="Forgot Password"/>
     </application>
 
 </manifest>

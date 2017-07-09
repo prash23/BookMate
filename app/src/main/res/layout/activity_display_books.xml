@@ -11,17 +11,19 @@
         android:id="@+id/summaryPhoto"
         android:layout_width="385dp"
         android:layout_height="185dp"
-        android:src="@drawable/no_image"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="0dp"
-        app:layout_constraintVertical_bias="0.00999999"
-        app:layout_constraintHorizontal_bias="0.5"/>
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:fadingEdgeLength="10dp"
+        android:padding="10dp"
+        android:src="@drawable/no_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.00999999"/>
 
     <TextView
         android:id="@+id/summaryName"

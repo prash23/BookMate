@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
@@ -109,6 +110,18 @@ class HomePage : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener
         FirebaseAuth.getInstance().signOut()
         finish()
         fragmentManager.popBackStack()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        minimizeApp()
+    }
+
+    fun minimizeApp() {
+        val startMain = Intent(Intent.ACTION_MAIN)
+        startMain.addCategory(Intent.CATEGORY_HOME)
+        startMain.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(startMain)
     }
 
     override fun onConnectionFailed(p0: ConnectionResult) {
